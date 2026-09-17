@@ -1,57 +1,49 @@
 import java.util.*;
 class Solution {
-    int result = -1;
     Queue<Node> queue = new LinkedList<>();
     public int solution(int[][] maps) {
-        int answer = 0;
-        int n = maps.length;
-        int m = maps[0].length;
-        boolean[][] visited = new boolean[n][m];
-        visited[0][0] = true;
-        queue.add(new Node(0, 0, 1));
-        while(!queue.isEmpty()) {
+        int answer = -1;
+        boolean[][] visited = new boolean[maps.length][maps[0].length];
+        queue.add(new Node(0,0, 1));
+        
+        while (!queue.isEmpty()) {
             Node node = queue.poll();
-            if (node.m == m-1 && node.n == n-1){
-                result = node.dist;
+            if (node.x == maps[0].length - 1 && node.y == maps.length - 1) {
+                answer = node.dist;
                 break;
             }
-            bfs(node, maps, visited, m, n);
+            
+            bfs(node, visited, maps);
         }
-        answer = result;
+        
         return answer;
     }
     
-    public void bfs(Node node, int[][] maps, boolean[][] visited, int m, int n) {
-        int a = node.m;
-        int b = node.n;
+    public void bfs(Node node, boolean[][] visited, int[][] maps) {
         
-        if (a-1 >= 0 && visited[b][a-1]==false && maps[b][a-1]==1) {
-            visited[b][a-1]=true;
-            queue.add(new Node(a-1, b, node.dist+1));
-        }
-        if (b-1 >= 0 && visited[b-1][a]==false && maps[b-1][a]==1) {
-            visited[b-1][a]=true;
-            queue.add(new Node(a, b-1, node.dist+1));
-        }
-        if (a+1 < m && visited[b][a+1]==false && maps[b][a+1]==1) {
-            visited[b][a+1]=true;
-            queue.add(new Node(a+1, b, node.dist+1));
-        }
-        if (b+1 < n && visited[b+1][a]==false && maps[b+1][a]==1) {
-            visited[b+1][a]=true;
-            queue.add(new Node(a, b+1, node.dist+1));
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, -1, 0, 1};
+        
+        for (int i = 0 ; i < 4 ; i++) {
+            if (node.x + dx[i] >= 0 && node.x + dx[i] < maps[0].length && node.y + dy[i] >= 0 && node.y + dy[i] < maps.length) {
+                if (visited[node.y + dy[i]][node.x + dx[i]] == false && maps[node.y + dy[i]][node.x + dx[i]] == 1) {
+                    queue.add(new Node(node.x + dx[i], node.y + dy[i], node.dist + 1));
+                    visited[node.y + dy[i]][node.x + dx[i]] = true;
+                }
+            }
         }
     }
+    
 }
 
 class Node {
-    public int m;
-    public int n;
-    public int dist;
+    int x;
+    int y;
+    int dist;
     
-    Node(int m, int n, int dist) {
-        this.m = m;
-        this.n = n;
+    public Node(int x, int y, int dist) {
+        this.x = x;
+        this.y = y;
         this.dist = dist;
     }
 }
