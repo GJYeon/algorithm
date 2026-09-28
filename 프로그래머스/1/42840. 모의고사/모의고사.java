@@ -3,60 +3,50 @@ class Solution {
     public int[] solution(int[] answers) {
         
         
+        int[] one = {1, 2, 3, 4, 5};
+        int[] two = {2, 1, 2, 3, 2, 4, 2, 5};
+        int[] three = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
+        
+        int sum1 = 0;
+        int sum2 = 0;
+        int sum3 = 0;
+        
+        for (int i = 0 ; i < answers.length ; i++) {
+            if (one[i%5] == answers[i]) {
+                sum1 += 1;
+            }
+            if (two[i%8] == answers[i]) {
+                sum2 += 1;
+            }
+            if (three[i%10] == answers[i]) {
+                sum3 += 1;
+            }
+        }
+        
         Map<Integer, Integer> map = new HashMap<>();
         
-        int[] p1 = {1,2,3,4,5};
-        int[] p2 = {2, 1, 2, 3, 2, 4, 2, 5};
-        int[] p3 = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
-        
-        int cnt1 = 0;
-        int max1 = 0;
-        for (int i = 0 ; i < answers.length ; i++) {
-            if (p1[cnt1%5] == answers[i]) {
-                max1 += 1;
-            }
-            cnt1++;
-        }
-        
-        int cnt2 = 0;
-        int max2 = 0;
-        for (int i = 0 ; i < answers.length ; i++) {
-            if (p2[cnt2%8] == answers[i]) {
-                max2 += 1;
-            }
-            cnt2++;
-        }
-        
-        int cnt3 = 0;
-        int max3 = 0;
-        for (int i = 0 ; i < answers.length ; i++) {
-            if (p3[cnt3%10] == answers[i]) {
-                max3 += 1;
-            }
-            cnt3++;
-        }
-        
-        map.put(1,max1);
-        map.put(2,max2);
-        map.put(3,max3);
+        map.put(1, sum1);
+        map.put(2, sum2);
+        map.put(3, sum3);
         
         List<Map.Entry<Integer, Integer>> entryList = new ArrayList<>(map.entrySet());
         
-        entryList.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        entryList.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
         
-        int answerCnt = 1;
+        List<Integer> result = new ArrayList<>();
+        
+        result.add(entryList.get(0).getKey());
         if (entryList.get(0).getValue().equals(entryList.get(1).getValue())) {
-            answerCnt += 1;
+            result.add(entryList.get(1).getKey());
             if (entryList.get(1).getValue().equals(entryList.get(2).getValue())) {
-                answerCnt += 1;
+                result.add(entryList.get(2).getKey());
             }
         }
-        int[] answer = new int[answerCnt];
-        for (int i = 0 ; i < answerCnt ; i++) {
-            answer[i] = entryList.get(i).getKey();
+        result.sort(null);
+        int[] answer = new int[result.size()];
+        for (int i = 0 ; i < result.size() ; i++) {
+            answer[i] = result.get(i);
         }
-        
-        Arrays.sort(answer);
         
         return answer;
     }
