@@ -1,30 +1,31 @@
 import java.util.*;
 class Solution {
-    Set<Integer> set = new HashSet<>();
+    Set<Integer> set= new HashSet<>();
     public int solution(String numbers) {
         int answer = 0;
         boolean[] visited = new boolean[numbers.length()];
-        
         for (int i = 0 ; i < numbers.length() ; i++) {
-            String str = "";
+            String temp = "";
+            temp += numbers.charAt(i);
             visited[i] = true;
-            str += numbers.charAt(i);
-            set.add(Integer.parseInt(str));
-            check(visited, numbers, str);
+            
+            back(numbers, temp, visited);
+            
             visited[i] = false;
+            
         }
-        for (Integer num : set) {
-            if (num < 2) {
+        
+        for (Integer i : set) {
+            boolean sosu = true;
+            if (i.equals(1) || i.equals(0)) {
                 continue;
             }
-            boolean isSosu = true;
-            for (int i = 2 ; i < num ; i++) {
-                if (num % i == 0) {
-                    isSosu = false;
-                    break;
-                } 
+            for (int j = 2 ; j < i ; j++) {
+                if (i % j == 0) {
+                    sosu = false;
+                }
             }
-            if (isSosu == true) {
+            if (sosu) {
                 answer += 1;
             }
         }
@@ -32,17 +33,15 @@ class Solution {
         return answer;
     }
     
-    public void check(boolean[] visited, String numbers, String str) {
+    public void back(String numbers, String str, boolean[] visited) {
+        set.add(Integer.parseInt(str));
         for (int i = 0 ; i < numbers.length() ; i++) {
+            String temp = str;
             if (visited[i] == false) {
-                String temp = "";
-                for (int j = 0 ; j < str.length() ; j++) {
-                    temp += str.charAt(j);
-                }
-                visited[i] = true;
                 temp += numbers.charAt(i);
-                set.add(Integer.parseInt(temp));
-                check(visited, numbers, temp);
+            
+                visited[i] = true;
+                back(numbers, temp, visited);
                 visited[i] = false;
             }
         }
