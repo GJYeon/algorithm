@@ -3,33 +3,37 @@ class Solution {
     public int[] solution(int[] prices) {
         int[] answer = new int[prices.length];
         
-        Stack<Integer> stack = new Stack<>();
-        Stack<Integer> stack2 = new Stack<>();
+        Stack<List<Integer>> stack = new Stack<>();
         
         for (int i = 0 ; i < prices.length ; i++) {
             if (stack.isEmpty()) {
-                stack.push(prices[i]);
-                stack2.push(i);
+                List<Integer> list = new ArrayList<>();
+                list.add(prices[i]);
+                list.add(i);
+                stack.push(list);
             } else {
-                if (stack.peek() <= prices[i]) {
-                    stack.push(prices[i]);
-                    stack2.push(i); 
+                if (stack.peek().get(0) <= prices[i]) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(prices[i]);
+                    list.add(i);
+                    stack.push(list);
                 } else {
-                    while (!stack.isEmpty() && stack.peek() > prices[i]) {
-                        stack.pop();
-                        int a = stack2.pop();
-                        answer[a] = i - a;
+                    while (!stack.isEmpty() && stack.peek().get(0) > prices[i]) {
+                        List<Integer> price = stack.pop();
+                        answer[price.get(1)] = i - price.get(1);
                     }
-                    stack.push(prices[i]);
-                    stack2.push(i);
+                    List<Integer> list = new ArrayList<>();
+                    list.add(prices[i]);
+                    list.add(i);
+                    stack.push(list);
                 }
-            }
+            }   
         }
         
         while (!stack.isEmpty()) {
-            stack.pop();
-            int a = stack2.pop();
-            answer[a] = prices.length - 1 - a;
+            List<Integer> price = stack.pop();
+            answer[price.get(1)] = prices.length - 1 - price.get(1);
+            
         }
         
         
