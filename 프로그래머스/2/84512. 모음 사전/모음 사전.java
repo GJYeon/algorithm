@@ -1,33 +1,31 @@
 import java.util.*;
 class Solution {
+    
     public int solution(String word) {
         int answer = 0;
-        char[] c = {'A', 'E', 'I', 'O', 'U'};
-        List<String> dictionary = new ArrayList<>();
-        for (int i = 0 ; i < 5 ; i++) {
-            int cnt = 1;
-            String str = "" + c[i];
-            dictionary.add(str);
-            check(c, dictionary, str, cnt);
-        }
+        String aeiou = "AEIOU";
+        int cnt = 0;
+        List<String> list = new ArrayList<>();
+        loop(aeiou, "", cnt, list);
+        list.sort(null);
         
-        dictionary.sort(null);
-        for (int i = 0 ; i < dictionary.size() ; i++) {
-            if (dictionary.get(i).equals(word)) {
-                answer = i + 1;
+        for (int i = 0 ; i < list.size() ; i++) {
+            if (word.equals(list.get(i))) {
+                answer = i+1;
                 break;
             }
         }
+            
+        
         return answer;
     }
     
-    public void check(char[] c, List<String> dictionary, String str, int cnt) {
-        cnt += 1;
+    public void loop(String aeiou, String str, int cnt, List<String> list) {
+        cnt++;
         for (int i = 0 ; i < 5 ; i++) {
-            String temp = str + c[i];
-            dictionary.add(temp);
-            if (cnt < 5) {
-                check(c,dictionary, temp, cnt);
+            list.add(str + aeiou.charAt(i));
+            if (cnt <= 4) {
+                loop(aeiou, str + aeiou.charAt(i), cnt, list);
             }
         }
     }
