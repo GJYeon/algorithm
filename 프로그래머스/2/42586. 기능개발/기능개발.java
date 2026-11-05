@@ -1,38 +1,31 @@
 import java.util.*;
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        List<Integer> answer2 = new ArrayList<>();
-        boolean[] visited = new boolean[progresses.length];
-        int pivot = 0;
-        while (pivot < progresses.length) {
-            int cnt = (100 - progresses[pivot]) % speeds[pivot] != 0 ? 
-                (100 - progresses[pivot]) / speeds[pivot] + 1 : 
-            (100 - progresses[pivot]) / speeds[pivot];
-            int c = 0;
+     
+        List<Integer> list = new ArrayList<>();
+        
+        int idx = 0;
+        while (idx < progresses.length) {
+            int alpha = 100 - progresses[idx];
+            int cnt = alpha % speeds[idx] == 0 ? alpha / speeds[idx] : alpha / speeds[idx] + 1;
+            int m = 1;
             boolean check = true;
-            for (int i = pivot ; i < progresses.length ; i++) {
-                progresses[i] += speeds[i] * cnt;
-                if (progresses[i] >= 100 && visited[i] == false) {
-                    if (check) {
-                        c += 1; 
-                        visited[i] = true;
-                    }
-                  
+            for (int i = idx + 1 ; i < progresses.length ; i++ ) {
+                progresses[i] += cnt * speeds[i];
+                if (check == true && progresses[i] >= 100) {
+                    m++;
                 } else {
-                    if (progresses[i] < 100) {
-                        check = false;
-                    }
+                    check = false;
                 }
             }
-            pivot += c;
-            answer2.add(c);
-            
+            idx += m;
+            list.add(m);
         }
-        int[] answer = new int[answer2.size()];
-        for (int i = 0; i < answer2.size(); i++) {
-            answer[i] = answer2.get(i);
+        int[] answer = new int[list.size()];
+        for (int i = 0 ; i < list.size() ; i++) {
+            answer[i] = list.get(i);
         }
-        
+         
         return answer;
     }
 }
