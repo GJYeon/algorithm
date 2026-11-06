@@ -5,26 +5,25 @@ class Solution {
         
         Map<String, Integer> map = new HashMap<>();
         
-        for (String c : completion) {
-            if (map.get(c) != null) {
-                map.put(c, map.get(c) + 1);
+        for (int i = 0 ; i < participant.length ; i++) {
+            if (map.get(participant[i]) == null) {
+                map.put(participant[i], 1);
             } else {
-                map.put(c, 1);   
+                map.put(participant[i], map.get(participant[i]) + 1);
             }
         }
         
-        for (String p : participant) {
-            if (map.get(p) != null) {
-                if (map.get(p) == 1) {
-                    map.remove(p);
-                } else {
-                    map.put(p, map.get(p) - 1);
-                }
-                continue;
+        for (int i = 0 ; i < completion.length ; i++) {
+            if (map.get(completion[i]) == 1) {
+                map.remove(completion[i]);
             } else {
-                answer = p;
-                break;
+                map.put(completion[i], map.get(completion[i]) - 1);
             }
+        }
+        
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(map.entrySet());
+        for (Map.Entry<String, Integer> entry : entryList) {
+            answer = entry.getKey();
         }
         
         return answer;
