@@ -2,46 +2,54 @@ import java.util.*;
 class Solution {
     public int[] solution(String[] id_list, String[] report, int k) {
         int[] answer = new int[id_list.length];
-        Map<String, Set<String>> map = new HashMap<>();
+        
+        Map<String, Set<String>> reportMap = new HashMap<>();
+        Map<String, Integer> reported = new HashMap<>();
         
         for (int i = 0 ; i < id_list.length ; i++) {
-            map.put(id_list[i], new HashSet<>());
+            reportMap.put(id_list[i], new HashSet<>());
+            reported.put(id_list[i], 0);
         }
-        
-        for (int i = 0 ; i < report.length ; i++) {
-            String[] rp = report[i].split(" ");
-            map.get(rp[0]).add(rp[1]);
-        }
-        Map<String, Integer> cnt = new HashMap<>();
-        for (int i = 0 ; i < id_list.length ; i++) {
-            cnt.put(id_list[i], 0);
-        }
-        
-        
-        for (int i = 0 ; i < id_list.length ; i++) {
-            for (String reported : map.get(id_list[i])) {
-                cnt.put(reported, cnt.get(reported) + 1);
-            }
-        }
-        
-        Set<String> bannedUsers = new HashSet<>();
-        for (String id : id_list) {
-            if (cnt.get(id) >= k) {
-                bannedUsers.add(id);
-            }
-        }
-        
-        for (int i= 0 ; i < id_list.length; i++) {
-            String id = id_list[i];
-            int mailCount = 0;
+        for (int i = 0 ; i <report.length ; i++) {
+            String[] oneReport = report[i].split(" ");
+            String reporting = oneReport[0];
+            String reportedP = oneReport[1];
             
-            for (String reported : map.get(id)) {
-                if (bannedUsers.contains(reported)) {
-                    mailCount++;
+            if (reportMap.get(reporting).contains(reportedP)) {
+                continue;
+            } else {
+                reportMap.get(reporting).add(reportedP);
+                reported.put(reportedP, reported.get(reportedP) + 1);
+            }
+        }
+        
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(reported.entrySet());
+        List<Map.Entry<String, Set<String>>> reportList = new ArrayList<>(reportMap.entrySet());
+        
+        Map<String, Integer> answerMap = new HashMap<>();
+        for (int i = 0 ; i < id_list.length ; i++) {
+            answerMap.put(id_list[i], 0);
+        }
+        
+        for (Map.Entry<String, Integer> entry : entryList) {
+            String kk = entry.getKey();
+            Integer v = entry.getValue();
+            
+            if (v >= k) {
+                for (Map.Entry<String, Set<String>> reportEntry : reportList) {
+                    if (reportEntry.getValue().contains(kk)) {
+                        answerMap.put(reportEntry.getKey(), answerMap.get(reportEntry.getKey()) + 1);
+                    }
                 }
             }
-            answer[i] = mailCount;
         }
+
+        for (int i = 0 ; i < id_list.length ; i++) {
+            String s = id_list[i];
+            answer[i] = answerMap.get(id_list[i]);
+        }
+        
+        
         
         
         return answer;
