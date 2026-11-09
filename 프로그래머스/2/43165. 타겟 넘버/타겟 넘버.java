@@ -1,25 +1,22 @@
 class Solution {
+    int answer = 0;
     public int solution(int[] numbers, int target) {
-        int answer = 0;
-        answer += casefunc(numbers, target, 0, '+', 0) + casefunc(numbers, target, 0, '-', 0);
+        
+        
+        check(numbers, target, 1, numbers[0]);
+        check(numbers, target, 1, -numbers[0]);
+        
         return answer;
     }
     
-    public int casefunc(int[] numbers, int target, int idx, char mark, int sum) {
-        if (mark == '+') {
-            sum += numbers[idx];
-        } else {
-            sum -= numbers[idx];
-        }
-        
-        if (idx == numbers.length-1) {
-            if (sum == target) {
-                return 1;
-            } else {
-                return 0;
+    public void check(int[] numbers, int target, int idx, int temp) {
+        if (idx == numbers.length) {
+            if (target == temp) {
+                answer += 1;
             }
-        } else {
-            return casefunc(numbers, target, idx+1, '+', sum) + casefunc(numbers, target, idx+1, '-', sum);
+            return;
         }
+        check(numbers, target, idx + 1, temp + numbers[idx]);
+        check(numbers, target, idx + 1, temp - numbers[idx]);
     }
 }
